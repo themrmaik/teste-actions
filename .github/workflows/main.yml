@@ -1,31 +1,34 @@
 name: Pull Request
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  isntall:
+  install:
     name: Install Packages
     runs-on: ubuntu-latest
+    steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: cache node_modules
+
+      - name: Cache node_modules
         uses: actions/cache@v2
-        with: 
+        with:
           path: node_modules
-          key: ${{ runner.os}}-{{ hashFiles('**/yarn.lock')}}
+          key: ${{ runner.os }}-{{ hashFiles('**/yarn.lock') }}
+
       - name: Install dependencies
-        run: yarn install  
+        run: yarn install
+
   unusedexports:
-    name: check unused exports
+    name: Check Unused Exports
     runs-on: ubuntu-latest
     needs: install
+    steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: restore node_modules
-        uses: actions/cache@v2
-        with: 
-          path: node_modules
-          key: ${{ runner.os}}-{{ hashFiles('**/yarn.lock')}}
 
-      - name: Run ts-prune
-        run: yarn ts-prune --error  
+      - name: Restore node_modules
+        uses: actio
